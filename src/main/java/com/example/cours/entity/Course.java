@@ -2,6 +2,8 @@ package com.example.cours.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +22,6 @@ public class Course {
   private Instant startDate;
   private Instant endDate;
 
-  @OneToMany private Subscription subscriptions;
+  @OneToMany(mappedBy = "course")
+  private List<Subscription> subscriptions = new ArrayList<>();
 }
