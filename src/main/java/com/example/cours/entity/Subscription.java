@@ -1,7 +1,6 @@
 package com.example.cours.entity;
 
 import jakarta.persistence.*;
-import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,14 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-public class Course {
-  @GeneratedValue(strategy = GenerationType.UUID)
+public class Subscription {
   @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
   private UUID Id;
 
-  private String title;
-  private Instant startDate;
-  private Instant endDate;
+  @ManyToOne private User user;
 
-  @OneToMany private Subscription subscriptions;
+  @ManyToOne private Course course;
 }
