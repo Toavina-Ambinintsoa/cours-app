@@ -1,0 +1,124 @@
+openapi: 3.0.3
+info:
+  title: Course Registration API
+  description: API pour l'inscription d'un utilisateur à un cours (exercice Spring Boot)
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Serveur local de développement
+
+tags:
+  - name: inscriptions
+    description: Opérations d'inscription aux cours
+
+paths:
+  /inscriptions:
+    post:
+      tags:
+        - inscriptions
+      summary: Inscrire un utilisateur spécifique à un cours
+      description: |
+        Crée une inscription pour un utilisateur donné à un cours donné.
+        Après l'inscription réussie, un email de confirmation est envoyé via le Mailer de Poja.
+      operationId: registerUserToCourse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+      responses:
+        '201':
+          description: Inscription créée avec succès. Email de confirmation envoyé.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationResponse'
+        '400':
+          description: Requête invalide (utilisateur ou cours introuvable, dates invalides, etc.)
+        '404':
+          description: Utilisateur ou cours non trouvé
+        '409':
+          description: Utilisateur déjà inscrit à ce cours
+        '500':
+          description: Erreur interne (ex. problème d'envoi d'email)
+
+components:
+  schemas:
+    
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupont"
+        userName:
+          type: string
+          example: "jdupont"
+        email:
+          type: string
+          format: email
+          example: "jean.dupont@example.com"
+    
+    Course:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "987fcdeb-51a2-43e8-9f67-123456789abc"
+        title:
+          type: string
+          example: "Spring Boot Avancé"
+        startDate:
+          type: string
+          format: date-time
+          example: "2026-07-15T09:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2026-07-20T17:00:00Z"
+    
+    RegistrationRequest:
+      type: object
+      required:
+        - userId
+        - courseId
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: ID de l'utilisateur qui s'inscrit
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        courseId:
+          type: string
+          format: uuid
+          description: ID du cours
+          example: "987fcdeb-51a2-43e8-9f67-123456789abc"
+    
+    RegistrationResponse:
+      type: object
+      properties:
+        registrationId:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        user:
+          $ref: '#/components/schemas/User'
+        course:
+          $ref: '#/components/schemas/Course'
+        registeredAt:
+          type: string
+          format: date-time
+          example: "2026-07-03T09:15:00Z"
+        message:
+          type: string
+          example: "Inscription réussie. Un email de confirmation a été envoyé."
