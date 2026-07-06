@@ -22,6 +22,6 @@ public class JUser {
   private String userName;
   private String email;
 
-  @OneToMany(mappedBy = "juser")
+  @OneToMany(mappedBy = "user")
   private List<Subscription> subscriptions = new ArrayList<>();
 }
