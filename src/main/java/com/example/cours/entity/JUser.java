@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-public class User {
+public class JUser {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID Id;
@@ -22,6 +22,6 @@ public class User {
   private String userName;
   private String email;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "juser")
   private List<Subscription> subscriptions = new ArrayList<>();
 }

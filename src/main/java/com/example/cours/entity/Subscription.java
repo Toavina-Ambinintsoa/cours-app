@@ -15,7 +15,7 @@ public class Subscription {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID Id;
 
-  @ManyToOne private User user;
+  @ManyToOne private JUser user;
 
   @ManyToOne private Course course;
 }
