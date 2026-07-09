@@ -1,5 +1,7 @@
 package com.example.cours.endpoint.rest.controller.health;
 
+import com.example.cours.endpoint.event.EventProducer;
+import com.example.cours.endpoint.event.model.SendEmailRequested;
 import com.example.cours.entity.Subscription;
 import com.example.cours.mail.Email;
 import com.example.cours.mail.Mailer;
@@ -25,6 +27,7 @@ public class SubscriptionController {
   private final JUserRepository userRepository;
   private final CourseRepository courseRepository;
   private final Mailer mailer;
+  private final EventProducer<SendEmailRequested> eventProducer;
 
   @PostMapping
   @SneakyThrows
@@ -54,6 +57,14 @@ public class SubscriptionController {
     mailer.accept(new Email(recipient, List.of(), List.of(), subject, body, List.of()));
 
     return ResponseEntity.status(HttpStatus.CREATED).body(subscription);
+  }
+
+  @GetMapping("/hello")
+  @SneakyThrows
+  public String helloWorld(@RequestParam String to) {
+    var event = SendEmailRequested.builder().to(to).build();
+    eventProducer.accept(List.of(event));
+    return "... world!";
   }
 
   public record CreateSubscriptionRequest(UUID userId, UUID courseId) {}
